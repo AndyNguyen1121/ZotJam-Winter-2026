@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEditor.Rendering;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private Vector3 randomMaxPoint;
     [SerializeField] private Transform minPosition;
     [SerializeField] private Transform maxPosition;
+    [SerializeField] private float speed = 1f;
 
     private void Start()
     {
@@ -23,6 +25,7 @@ public class EnemyManager : MonoBehaviour
 
         Vector3 randomMinPoint = Vector3.Lerp(minPosition.position, maxPosition.position, Random.Range(0, 0.3f));
         Vector3 randomMaxPoint = Vector3.Lerp(minPosition.position, maxPosition.position, Random.Range(0.7f, 1f));
+        transform.DOMove(randomMaxPoint, speed).From(randomMinPoint).SetLoops(-1, LoopType.Yoyo).SetEase(Ease.InOutCubic);
     }
 
     private void Update()
@@ -34,5 +37,7 @@ public class EnemyManager : MonoBehaviour
         _localVelocity.x = Mathf.Clamp(_localVelocity.x, _minRotation, _maxRotation);
         Quaternion targetRotation = Quaternion.Euler(_carModel.transform.rotation.eulerAngles.x, _velocity.x * _rotationMultiplier, _carModel.transform.rotation.eulerAngles.z);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, _rotationSpeed * Time.deltaTime);
+
+        
     }
 }
